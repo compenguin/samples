@@ -1,1 +1,80 @@
-"Hello world" 
+<html>
+    <head>
+        <script>MathJax = {
+            startup : { typeset : false },
+            tex : { inlineMath : [['$','$']] }
+        }</script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <title>Math Note</title>
+</head>
+<body style='font-family: "Times New Roman", "YuMincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;'>
+
+<div><button type="button" id="toggle" style="background:gray; border-radius:5px; font-family:Verdana, Geneva, Tahoma, sans-serif">View</button></div>
+<div id="editor" contenteditable="true" hidden="true" style="border: 1px solid #aaa;"></div>
+<div id="screen" hidden="true"></div>
+<script>
+    const storage = localStorage;
+
+    const editor = (function() {
+        const context = document.getElementById("editor");
+        context.oninput = () => storage.setItem(sheet, context.innerHTML);
+        return {
+            show : function() {
+                context.innerHTML = storage.getItem(sheet);
+                context.hidden = false;
+            },
+            hide : function() {
+                storage.setItem(sheet, context.innerHTML);
+                context.innerHTML = '';
+                context.hidden = true;
+            }
+        };
+    })();
+
+    const screen = (function() {
+        const context = document.getElementById("screen");
+        return {
+            show : function() {
+                context.innerHTML = storage.getItem(sheet);
+                MathJax.typesetPromise().then(() => context.hidden = false);
+            },
+            hide : function() {
+                context.innerHTML = '';
+                context.hidden = true;
+            }
+        }
+
+    })();
+ 
+    let sheet = "1";
+
+    document.addEventListener('DOMContentLoaded', () => editor.show());
+
+    (function() {
+        const toggle = document.getElementById('toggle');
+        let status = 'editor';
+        toggle.onclick = function() {
+            if(status == 'view') {
+                screen.hide(); editor.show(); status = 'editor'; toggle.innerHTML = 'View';
+            } else if(status == 'editor') {
+                editor.hide(); screen.show(); status = 'view'; toggle.innerHTML = 'Edit';
+            }
+        }
+    })();
+
+
+    /* document.getElementById('editor').oninput = function(e) {
+        document.getElementById('screen').innerHTML = document.getElementById('editor').innerHTML;
+    }; */
+   
+</script>
+
+</body>
+</html>
+
+
+<!-- <div id="editor" contenteditable="true">
+    \((F, G, \theta)\)が随伴であるとは, \(Fa \to b\)と\(a \to Gb\)が自然同型であることをいう.
+</div> -->
