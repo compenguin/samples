@@ -27,8 +27,9 @@
             storage.setItem(sheet, context.innerHTML);
         };
         context.onkeypress = function(e) {
-            if(e.key == 'Enter' && e.shiftKey) {
+            if(e.key == 'Enter' && e.ctrlKey) {
                 toView();
+                context.blur();
             }
         }
         return {
@@ -49,7 +50,6 @@
         return {
             show : function() {
                 context.innerHTML = storage.getItem(sheet);
-                console.log(storage.getItem(sheet));
                 MathJax.typesetPromise().then(() => context.hidden = false);
             },
             hide : function() {
