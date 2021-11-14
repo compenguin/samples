@@ -11,9 +11,9 @@
 </head>
 <body style='font-family: "Times New Roman", "YuMincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;'>
 
-<div><button type="button" id="toggle" style="background:gray; border-radius:5px; font-family:Verdana, Geneva, Tahoma, sans-serif">View</button></div>
-<div id="editor" contenteditable="true" hidden="true" style="border: 1px solid #aaa;"></div>
-<div id="screen" hidden="true"></div>
+<!-- <div><button type="button" id="toggle" style="background:gray; border-radius:5px; font-family:Verdana, Geneva, Tahoma, sans-serif">View</button></div> -->
+<div id="editor" contenteditable="true" hidden="true" style="border: 1px solid #aaa;" ondblclick="toView();"></div>
+<div id="screen" hidden="true" ondblclick="toEdit();"></div>
 <script>
     const storage = localStorage;
 
@@ -45,14 +45,16 @@
                 context.hidden = true;
             }
         }
-
     })();
  
     let sheet = "1";
 
     document.addEventListener('DOMContentLoaded', () => editor.show());
 
-    (function() {
+    function toEdit() { screen.hide(); editor.show(); }
+    function toView() { editor.hide(); screen.show(); }
+
+/*    (function() {
         const toggle = document.getElementById('toggle');
         let status = 'editor';
         toggle.onclick = function() {
@@ -62,8 +64,7 @@
                 editor.hide(); screen.show(); status = 'view'; toggle.innerHTML = 'Edit';
             }
         }
-    })();
-
+    })(); */
 
     /* document.getElementById('editor').oninput = function(e) {
         document.getElementById('screen').innerHTML = document.getElementById('editor').innerHTML;
