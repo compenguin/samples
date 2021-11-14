@@ -1,9 +1,14 @@
 <html>
     <head>
         <script>MathJax = {
+            loader: {
+                load: ['[custom]/xypic.js'],
+                paths: {custom: 'https://cdn.jsdelivr.net/gh/sonoisa/XyJax-v3@3.0.1/build/'}
+            },
             startup : { typeset : false },
-            tex : { inlineMath : [['$','$']] }
-        }</script>
+            tex : { inlineMath : [['$','$']], packages: {'[+]': ['xypic']}}
+        };
+        </script>
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
         <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
     </script>
@@ -11,7 +16,6 @@
 </head>
 <body style='font-family: "Times New Roman", "YuMincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;'>
 
-<!-- <div><button type="button" id="toggle" style="background:gray; border-radius:5px; font-family:Verdana, Geneva, Tahoma, sans-serif">View</button></div> -->
 <div id="editor" contenteditable="true" hidden="true" style="border: 1px solid #aaa;" ondblclick="toView();"></div>
 <div id="screen" hidden="true" ondblclick="toEdit();"></div>
 <script>
@@ -19,14 +23,21 @@
 
     const editor = (function() {
         const context = document.getElementById("editor");
-        context.oninput = () => storage.setItem(sheet, context.innerHTML);
+        context.oninput = function(e) { 
+            storage.setItem(sheet, context.innerHTML);
+        };
+        context.onkeypress = function(e) {
+            if(e.key == 'Enter' && e.shiftKey) {
+                toView();
+            }
+        }
         return {
             show : function() {
-                context.innerHTML = storage.getItem(sheet);
+                context.innerText = storage.getItem(sheet);
                 context.hidden = false;
             },
             hide : function() {
-                storage.setItem(sheet, context.innerHTML);
+                storage.setItem(sheet, context.innerText);
                 context.innerHTML = '';
                 context.hidden = true;
             }
@@ -38,6 +49,7 @@
         return {
             show : function() {
                 context.innerHTML = storage.getItem(sheet);
+                console.log(storage.getItem(sheet));
                 MathJax.typesetPromise().then(() => context.hidden = false);
             },
             hide : function() {
@@ -53,29 +65,6 @@
 
     function toEdit() { screen.hide(); editor.show(); }
     function toView() { editor.hide(); screen.show(); }
-
-/*    (function() {
-        const toggle = document.getElementById('toggle');
-        let status = 'editor';
-        toggle.onclick = function() {
-            if(status == 'view') {
-                screen.hide(); editor.show(); status = 'editor'; toggle.innerHTML = 'View';
-            } else if(status == 'editor') {
-                editor.hide(); screen.show(); status = 'view'; toggle.innerHTML = 'Edit';
-            }
-        }
-    })(); */
-
-    /* document.getElementById('editor').oninput = function(e) {
-        document.getElementById('screen').innerHTML = document.getElementById('editor').innerHTML;
-    }; */
-   
 </script>
-
 </body>
 </html>
-
-
-<!-- <div id="editor" contenteditable="true">
-    \((F, G, \theta)\)が随伴であるとは, \(Fa \to b\)と\(a \to Gb\)が自然同型であることをいう.
-</div> -->
