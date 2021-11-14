@@ -27,7 +27,7 @@
             storage.setItem(sheet, context.innerHTML);
         };
         context.onkeypress = function(e) {
-            if(e.key == 'Enter' && e.ctrlKey) {
+            if(e.key == 'Enter' && e.shiftKey) {
                 toView();
                 context.blur();
             }
