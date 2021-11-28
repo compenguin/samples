@@ -10,8 +10,8 @@
         };
         </script>
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-    </script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <title>Math Note</title>
 </head>
 <body style='font-family: "Times New Roman", "YuMincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;'>
@@ -49,7 +49,7 @@
         const context = document.getElementById("screen");
         return {
             show : function() {
-                context.innerHTML = storage.getItem(sheet);
+                context.innerHTML = marked.parse(storage.getItem(sheet));
                 MathJax.typesetPromise().then(() => context.hidden = false);
             },
             hide : function() {
